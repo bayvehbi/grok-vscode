@@ -1,0 +1,112 @@
+{
+  "name": "grok-interactive",
+  "displayName": "Grok Interactive",
+  "description": "Ask interactive questions to Grok about your code",
+  "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bayvehbi/grok-vscode.git"
+  },
+  "publisher": "vehbi",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onCommand:grokInteractive.askGrok",
+    "onCommand:grokInteractive.askGrokFullFile",
+    "onCommand:grokInteractive.changeApiKey",
+    "onView:grokInteractive.view"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "grokInteractive.askGrok",
+        "title": "Ask Grok About This Code"
+      },
+      {
+        "command": "grokInteractive.askGrokFullFile",
+        "title": "Ask Grok About Full File"
+      },
+      {
+        "command": "grokInteractive.changeApiKey",
+        "title": "Change Grok API Key"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "when": "editorHasSelection",
+          "command": "grokInteractive.askGrok",
+          "group": "navigation"
+        },
+        {
+          "command": "grokInteractive.askGrokFullFile",
+          "group": "navigation"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "grokInteractive.changeApiKey",
+          "when": "view == grokInteractive.view",
+          "group": "navigation",
+          "icon": {
+            "light": "media/three-dots-icon.svg",
+            "dark": "media/three-dots-icon.svg"
+          }
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "grokInteractive-container",
+          "title": "Grok Interactive",
+          "icon": "media/grok-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "grokInteractive-container": [
+        {
+          "id": "grokInteractive.view",
+          "name": "Grok Chat",
+          "type": "webview"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Grok Interactive",
+      "properties": {
+        "grokInteractive.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Your xAI API key for Grok"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "npx webpack --mode production",
+    "watch": "npx webpack --mode development --watch",
+    "vscode:prepublish": "npm run build",
+    "compile": "tsc -p ./",
+    "package": "npx vsce package",
+    "deploy": "npm install && npm run build && npm run package && code --uninstall-extension vehbi.grok-interactive && code --install-extension grok-interactive-0.0.1.vsix && echo Please reload VS Code to apply changes (F1 > Developer: Reload Window)"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^18.x",
+    "@types/axios": "^0.14.0",
+    "typescript": "^5.2.2",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4",
+    "ts-loader": "^9.5.1",
+    "vsce": "^2.15.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.8"
+  }
+}
