@@ -29,6 +29,10 @@
         "title": "Ask Grok About This Code"
       },
       {
+        "command": "grokInteractive.selectModel",
+        "title": "Select Model"
+      },
+      {
         "command": "grokInteractive.askGrokFullFile",
         "title": "Ask Grok About Full File"
       },
@@ -46,6 +50,11 @@
         },
         {
           "command": "grokInteractive.askGrokFullFile",
+          "group": "navigation"
+        },
+        {
+          "command": "grokInteractive.selectModel",
+          "when": "view == grokInteractive.view",
           "group": "navigation"
         }
       ],
@@ -86,6 +95,11 @@
           "type": "string",
           "default": "",
           "description": "Your xAI API key for Grok"
+        },
+        "grokInteractive.model": {
+          "type": "string",
+          "default": "grok-2-latest",
+          "description": "Grok model selection (e.g., grok-1, grok-2-latest, grok-3, etc.)"
         }
       }
     }
@@ -97,7 +111,7 @@
     "compile": "tsc -p ./",
     "package": "npx vsce package",
     "test": "npm audit",
-    "deploy": "npm install && npm run build && npm run package && code --install-extension $(Get-ChildItem -Filter '*.vsix' | Sort-Object LastWriteTime -Descending | Select-Object -First 1 | ForEach-Object { $_.FullName }) && echo Please reload VS Code to apply changes (F1 > Developer: Reload Window)"
+    "deploy": "npm install && npm run build && npm run package && node scripts/deploy.js"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

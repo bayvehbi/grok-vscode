@@ -100,6 +100,20 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
+    const selectModelDisposable = vscode.commands.registerCommand('grokInteractive.selectModel', async () => {
+        const models = ['grok-1', 'grok-1.5', 'grok-2-latest', 'grok-3'];
+
+        const selected = await vscode.window.showQuickPick(models, {
+            placeHolder: 'Select Grok model'
+        });
+
+        if (selected) {
+            await vscode.workspace.getConfiguration('grokInteractive').update('model', selected, vscode.ConfigurationTarget.Global);
+            vscode.window.showInformationMessage(`Model set to: ${selected}`);
+        }
+    });
+    context.subscriptions.push(selectModelDisposable);
+
     context.subscriptions.push(askGrokDisposable);
     context.subscriptions.push(askGrokFullFileDisposable);
     context.subscriptions.push(changeApiKeyDisposable);
@@ -137,9 +151,11 @@ async function askGrokWithApiCheck(code: string, question: string, previousMessa
         ...previousMessages
     ];
 
+    const selectedModel = vscode.workspace.getConfiguration('grokInteractive').get('model') as string || 'grok-2-latest';
+
     const payload = {
         messages,
-        model: 'grok-2-latest',
+        model: selectedModel,
         stream: false,
         temperature: 0
     };
